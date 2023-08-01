@@ -6,12 +6,15 @@ const OpenSeatConferenceRoomHour: number = 5;
 const CabinSeatConferenceRoomHour: number = 10;
 const ConferenceRoomCost: number = 200;
 const conferenceRoomGST: number = 1.18;
+const MealsCost: number = 100;
+const MealsGST: number = 1.12;
+
 export class Invoice {
     constructor() {
     }
 
 
-    print(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
+    print(openSeat: number, cabinSeat: number, conferenceRoomHours: number, meals: number): number {
         
         const openSeatCost = this.calculateOpenSeatCost(openSeat);
         const cabinSeatCost = this.calculateCabinSeatCost(cabinSeat);
@@ -19,16 +22,18 @@ export class Invoice {
         const cabinSeatCostWithGST = this.calculateCabinSeatGST(cabinSeatCost);
         const conferenceRoomCost = this.calculateConferenceRoomCost(openSeat, cabinSeat, conferenceRoomHours);
         const conferenceRoomCostWithGST = this.calculateConferenceRoomGST(conferenceRoomCost);
+        const mealsCost = this.calculateMealsCost(meals);
+        const mealsCostWithGST = this.calculateMealsGST(mealsCost);
 
-        return openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST;
+        return openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST+mealsCostWithGST;
     }
-    
-    calculateConferenceRoomGST(conferenceRoomCost: number): number {
+
+    private calculateConferenceRoomGST(conferenceRoomCost: number): number {
         const totalOpenSeatCost = conferenceRoomCost*conferenceRoomGST;
         return totalOpenSeatCost;
     }
 
-    calculateConferenceRoomCost(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
+    private calculateConferenceRoomCost(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
         
         const freeOpenSeatHour = openSeat*OpenSeatConferenceRoomHour;
         const freeCabinSeatHour = cabinSeat*CabinSeatConferenceRoomHour;
@@ -58,6 +63,16 @@ export class Invoice {
 
     private calculateCabinSeatCost(cabinSeat: number): number  {
         const cost = cabinSeat*cabinSeatPrice;
+        return cost;
+    }
+
+    private calculateMealsGST(mealsCost: number) {
+        const totalMealsCost = mealsCost*MealsGST;
+        return totalMealsCost;
+    }
+
+    private calculateMealsCost(meals: number): number  {
+        const cost = meals*MealsCost;
         return cost;
     }
 }
