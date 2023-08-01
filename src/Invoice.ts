@@ -15,13 +15,13 @@ export class Invoice {
 
     print(openSeat: number, cabinSeat: number, conferenceRoomHours: number, meals: number): number {
         
-        const openSeatCost = this.calculateOpenSeatCost(openSeat);
-        const cabinSeatCost = this.calculateCabinSeatCost(cabinSeat);
+        const openSeatCost = this.calculateCost(openSeat, this.OPEN_SEAT_PRICE);
+        const cabinSeatCost = this.calculateCost(cabinSeat, this.CABIN_SEAT_PRICE);
+        const mealsCost = this.calculateCost(meals, this.MEALS_COST);
+        const conferenceRoomCost = this.calculateConferenceRoomCost(openSeat, cabinSeat, conferenceRoomHours);
+        const conferenceRoomCostWithGST = this.calculateGST(conferenceRoomCost, this.CONFERENCE_ROOM_GST);
         const openSeatCostWithGST = this.calculateGST(openSeatCost, this.OPEN_SEAT_GST);
         const cabinSeatCostWithGST = this.calculateGST(cabinSeatCost, this.CABIN_SEAT_GST);
-        const conferenceRoomCost = this.calculateConferenceRoomCost(openSeat, cabinSeat, conferenceRoomHours);
-        const conferenceRoomCostWithGST = this.calculateGST(conferenceRoomCost, this.CONFERENCE_ROOM_GST );
-        const mealsCost = this.calculateMealsCost(meals);
         const mealsCostWithGST = this.calculateGST(mealsCost,this.MEALS_GST);
 
         return openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST+mealsCostWithGST;
@@ -35,29 +35,15 @@ export class Invoice {
         if(unpaidConferenceRoomHour > 0){
             return unpaidConferenceRoomHour*this.CONFERENCE_ROOM_PRICE;
         }
-        else{
-            return 0;
-        }
-    }
-
-    private calculateOpenSeatCost(openSeat: number): number  {
-        const cost = openSeat*this.OPEN_SEAT_PRICE;
-        return cost;
-    }
-
-    private calculateCabinSeatCost(cabinSeat: number): number  {
-        const cost = cabinSeat*this.CABIN_SEAT_PRICE;
-        return cost;
-    }
-
-
-    private calculateMealsCost(meals: number): number  {
-        const cost = meals*this.MEALS_COST;
-        return cost;
+        return 0;
     }
 
     private calculateGST(amount: number, gstRate: number): number {
-    return amount * gstRate;
-  }
+        return amount * gstRate;
+    }
+
+    private calculateCost(quantity: number, price: number): number {
+        return quantity * price;
+    }
 }
 
