@@ -1,15 +1,14 @@
-const OpenSeatPrice: number = 5000;
-const OpenSeatGST: number = 1.18;
-const cabinSeatPrice: number = 10000;
-const CabinSeatGST: number = 1.18;
-const OpenSeatConferenceRoomHour: number = 5;
-const CabinSeatConferenceRoomHour: number = 10;
-const ConferenceRoomCost: number = 200;
-const conferenceRoomGST: number = 1.18;
-const MealsCost: number = 100;
-const MealsGST: number = 1.12;
-
 export class Invoice {
+    private readonly OPEN_SEAT_PRICE: number = 5000;
+    private readonly OPEN_SEAT_GST: number = 1.18;
+    private readonly CABIN_SEAT_PRICE: number = 10000;
+    private readonly CABIN_SEAT_GST: number = 1.18;
+    private readonly OPEN_SEAT_CONFERENCE_ROOM_HOUR: number = 5;
+    private readonly CABIN_SEAT_CONFERENCE_ROOM_HOUR: number = 10;
+    private readonly CONFERENCE_ROOM_PRICE: number = 200;
+    private readonly CONFERENCE_ROOM_GST: number = 1.18;
+    private readonly MEALS_COST: number = 100;
+    private readonly MEALS_GST: number = 1.12;
     constructor() {
     }
 
@@ -18,62 +17,47 @@ export class Invoice {
         
         const openSeatCost = this.calculateOpenSeatCost(openSeat);
         const cabinSeatCost = this.calculateCabinSeatCost(cabinSeat);
-        const openSeatCostWithGST = this.calculateOpenSeatGST(openSeatCost);
-        const cabinSeatCostWithGST = this.calculateCabinSeatGST(cabinSeatCost);
+        const openSeatCostWithGST = this.calculateGST(openSeatCost, this.OPEN_SEAT_GST);
+        const cabinSeatCostWithGST = this.calculateGST(cabinSeatCost, this.CABIN_SEAT_GST);
         const conferenceRoomCost = this.calculateConferenceRoomCost(openSeat, cabinSeat, conferenceRoomHours);
-        const conferenceRoomCostWithGST = this.calculateConferenceRoomGST(conferenceRoomCost);
+        const conferenceRoomCostWithGST = this.calculateGST(conferenceRoomCost, this.CONFERENCE_ROOM_GST );
         const mealsCost = this.calculateMealsCost(meals);
-        const mealsCostWithGST = this.calculateMealsGST(mealsCost);
+        const mealsCostWithGST = this.calculateGST(mealsCost,this.MEALS_GST);
 
         return openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST+mealsCostWithGST;
     }
 
-    private calculateConferenceRoomGST(conferenceRoomCost: number): number {
-        const totalOpenSeatCost = conferenceRoomCost*conferenceRoomGST;
-        return totalOpenSeatCost;
-    }
-
     private calculateConferenceRoomCost(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
         
-        const freeOpenSeatHour = openSeat*OpenSeatConferenceRoomHour;
-        const freeCabinSeatHour = cabinSeat*CabinSeatConferenceRoomHour;
+        const freeOpenSeatHour = openSeat*this.OPEN_SEAT_CONFERENCE_ROOM_HOUR;
+        const freeCabinSeatHour = cabinSeat*this.CABIN_SEAT_CONFERENCE_ROOM_HOUR;
         const unpaidConferenceRoomHour = conferenceRoomHours - freeOpenSeatHour - freeCabinSeatHour
         if(unpaidConferenceRoomHour > 0){
-            return unpaidConferenceRoomHour*ConferenceRoomCost;
+            return unpaidConferenceRoomHour*this.CONFERENCE_ROOM_PRICE;
         }
         else{
             return 0;
         }
     }
 
-    private calculateOpenSeatGST(openSeatCost: number) {
-        const totalOpenSeatCost = openSeatCost*OpenSeatGST;
-        return totalOpenSeatCost;
-    }
-
     private calculateOpenSeatCost(openSeat: number): number  {
-        const cost = openSeat*OpenSeatPrice;
+        const cost = openSeat*this.OPEN_SEAT_PRICE;
         return cost;
-    }
-
-    private calculateCabinSeatGST(cabinSeatCost: number) {
-        const totalOpenSeatCost = cabinSeatCost*CabinSeatGST;
-        return totalOpenSeatCost;
     }
 
     private calculateCabinSeatCost(cabinSeat: number): number  {
-        const cost = cabinSeat*cabinSeatPrice;
+        const cost = cabinSeat*this.CABIN_SEAT_PRICE;
         return cost;
     }
 
-    private calculateMealsGST(mealsCost: number) {
-        const totalMealsCost = mealsCost*MealsGST;
-        return totalMealsCost;
-    }
 
     private calculateMealsCost(meals: number): number  {
-        const cost = meals*MealsCost;
+        const cost = meals*this.MEALS_COST;
         return cost;
     }
+
+    private calculateGST(amount: number, gstRate: number): number {
+    return amount * gstRate;
+  }
 }
 
