@@ -23,19 +23,23 @@ export class Invoice {
         const openSeatCostWithGST = this.calculateGST(openSeatCost, this.OPEN_SEAT_GST);
         const cabinSeatCostWithGST = this.calculateGST(cabinSeatCost, this.CABIN_SEAT_GST);
         const mealsCostWithGST = this.calculateGST(mealsCost,this.MEALS_GST);
+        const totalCost =  openSeatCost+cabinSeatCost+mealsCost+conferenceRoomCost;
+        const totalCostWithGST = openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST+mealsCostWithGST;
+        const totalGST = totalCostWithGST-totalCost
 
-        return openSeatCostWithGST+cabinSeatCostWithGST+conferenceRoomCostWithGST+mealsCostWithGST;
-    }
+        const invoice = `
+        Monthly Invoice
+        ---------------
+        ${openSeat} Open Seats: Rs. ${openSeatCostWithGST}
+        ${cabinSeat} Cabin Seats: Rs. ${cabinSeatCostWithGST}
+        ${conferenceRoomHours} hours of Conference Room usage: Rs. ${conferenceRoomCostWithGST}
+        ${meals} Meals: Rs. ${mealsCostWithGST}
+        Total: Rs. ${totalCostWithGST}
+        Total GST: ${totalGST}
+        `;
 
-    private calculateConferenceRoomCost(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
-        
-        const freeOpenSeatHour = openSeat*this.OPEN_SEAT_CONFERENCE_ROOM_HOUR;
-        const freeCabinSeatHour = cabinSeat*this.CABIN_SEAT_CONFERENCE_ROOM_HOUR;
-        const unpaidConferenceRoomHour = conferenceRoomHours - freeOpenSeatHour - freeCabinSeatHour
-        if(unpaidConferenceRoomHour > 0){
-            return unpaidConferenceRoomHour*this.CONFERENCE_ROOM_PRICE;
-        }
-        return 0;
+        console.log(invoice)
+        return totalCostWithGST;
     }
 
     private calculateGST(amount: number, gstRate: number): number {
@@ -44,6 +48,16 @@ export class Invoice {
 
     private calculateCost(quantity: number, price: number): number {
         return quantity * price;
+    }
+
+    private calculateConferenceRoomCost(openSeat: number, cabinSeat: number, conferenceRoomHours: number): number {
+        const freeOpenSeatHour = openSeat*this.OPEN_SEAT_CONFERENCE_ROOM_HOUR;
+        const freeCabinSeatHour = cabinSeat*this.CABIN_SEAT_CONFERENCE_ROOM_HOUR;
+        const unpaidConferenceRoomHour = conferenceRoomHours - freeOpenSeatHour - freeCabinSeatHour
+        if(unpaidConferenceRoomHour > 0){
+            return unpaidConferenceRoomHour*this.CONFERENCE_ROOM_PRICE;
+        }
+        return 0;
     }
 }
 
