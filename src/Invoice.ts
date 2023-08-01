@@ -13,7 +13,7 @@ export class Invoice {
     }
 
 
-    print(openSeat: number, cabinSeat: number, conferenceRoomHours: number, meals: number): number {
+    print(openSeat: number, cabinSeat: number, conferenceRoomHours: number, meals: number): string {
         
         const openSeatCost = this.calculateCost(openSeat, this.OPEN_SEAT_PRICE);
         const cabinSeatCost = this.calculateCost(cabinSeat, this.CABIN_SEAT_PRICE);
@@ -29,7 +29,6 @@ export class Invoice {
 
         const invoice = `
         Monthly Invoice
-        ---------------
         ${openSeat} Open Seats: Rs. ${openSeatCostWithGST}
         ${cabinSeat} Cabin Seats: Rs. ${cabinSeatCostWithGST}
         ${conferenceRoomHours} hours of Conference Room usage: Rs. ${conferenceRoomCostWithGST}
@@ -39,7 +38,8 @@ export class Invoice {
         `;
 
         console.log(invoice)
-        return totalCostWithGST;
+        // return totalCostWithGST;
+        return invoice;
     }
 
     private calculateGST(amount: number, gstRate: number): number {
